@@ -1,3 +1,5 @@
+mod vec3;
+
 fn main() {
 
     let img_width: i32 = 256;
