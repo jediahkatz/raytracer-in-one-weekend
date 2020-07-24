@@ -186,9 +186,21 @@ impl Vec3 {
     }
 }
 
-type Point3 = Vec3;
-type Color3 = Vec3;
+pub type Point3 = Vec3;
+pub type Color3 = Vec3;
 
+
+impl Color3 {
+
+    pub fn println(&self) {
+        let ir: i32 = (255.999 * self.x) as i32;
+        let ig: i32 = (255.999 * self.y) as i32;
+        let ib: i32 = (255.999 * self.z) as i32;
+
+        println!("{} {} {}", ir, ib, ig);
+    }
+
+}
 
 // impl std::ops::Index<i32> for Vec3 {
 //     type Output = f64;
