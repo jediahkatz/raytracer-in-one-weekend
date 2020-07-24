@@ -1,22 +1,36 @@
 mod vec3;
-use vec3::{Color3, Point3};
+mod ray;
+use vec3::{Color3, Point3, Vec3};
+use ray::Ray;
 
 fn main() {
 
-    let img_width: i32 = 256;
-    let img_height: i32 = 256;
+    // Image
+    const ASPECT_RATIO: f64 = 16.0 / 9.0;
+    const IMG_WIDTH: i32 = 256;
+    const IMG_HEIGHT: i32 = 256;
 
-    println!("P3\n{} {}\n255", img_width, img_height);
+    // Camera
+    let viewport_height: f64 = 2.0;
+    let viewport_width: f64 = ASPECT_RATIO * viewport_height;
+    let focal_length: f64 = 1.0;
 
-    for j in (0..img_height).rev() {
+    let origin: Point3 = Point3::new(0.0, 0.0, 0.0);
+    let horizontal: Vec3 = Vec3::new(viewport_width, 0.0, 0.0);
+    let vertical: Vec3 = Vec3::new(0.0, viewport_height, 0.0);
+    let lower_left_corner: Vec3 = &(&origin - &(&horizontal/2.0)) - &(&vertical/2.0) - Vec3::new(0.0, 0.0, focal_length);
+
+    // Render
+    println!("P3\n{} {}\n255", IMG_WIDTH, IMG_HEIGHT);
+
+    for j in (0..IMG_HEIGHT).rev() {
         eprintln!("\rScanlines remaining: {}", j);
-        for i in 0..img_width {
-            let r: f64 = f64::from(i)/f64::from(img_height-1);
-            let g: f64 = f64::from(j)/f64::from(img_width-1);
-            let b: f64 = 0.25;
-            let c: vec3::Color3 = Color3::new(r, g, b);
-
-            c.println();
+        for i in 0..IMG_WIDTH {
+            let u: f64 = f64::from(i)/f64::from(IMG_HEIGHT-1);
+            let v: f64 = f64::from(j)/f64::from(IMG_WIDTH-1);
+            // I know this sucks and could be avoided by defining &u + v and u + &v, but I want to practice understanding ownership
+            let r: Ray = Ray::new(&origin, &(&lower_left_corner + &(&(&horizontal * u) + &(&(&vertical * v) - &origin))));
+            r.color().println();
         }
     }
 

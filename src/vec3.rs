@@ -146,6 +146,19 @@ impl std::ops::Div<f64> for Vec3 {
     }
 }
 
+impl<'a> std::ops::Div<f64> for &'a Vec3 {
+    type Output = Vec3;
+
+    fn div(self, other: f64) -> Vec3 {
+        Vec3 {
+            x: (1.0/other) * self.x,
+            y: (1.0/other) * self.y,
+            z: (1.0/other) * self.z,
+        }
+    }
+}
+
+
 impl std::fmt::Display for Vec3 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "({}, {}, {})", self.x, self.y, self.z)
