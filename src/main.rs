@@ -7,8 +7,8 @@ fn main() {
 
     // Image
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const IMG_WIDTH: i32 = 256;
-    const IMG_HEIGHT: i32 = 256;
+    const IMG_WIDTH: i32 = 400;
+    const IMG_HEIGHT: i32 = ((IMG_WIDTH as f64) / ASPECT_RATIO) as i32;
 
     // Camera
     let viewport_height: f64 = 2.0;

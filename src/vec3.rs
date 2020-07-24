@@ -210,7 +210,7 @@ impl Color3 {
         let ig: i32 = (255.999 * self.y) as i32;
         let ib: i32 = (255.999 * self.z) as i32;
 
-        println!("{} {} {}", ir, ib, ig);
+        println!("{} {} {}", ir, ig, ib);
     }
 
 }
