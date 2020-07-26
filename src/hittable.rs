@@ -1,7 +1,22 @@
 struct Hit {
     pub p: Point3;
+    /// Normal vector pointing in the opposite direction of the ray
     pub normal: Vec3;
     pub t: double;
+    /// Whether this intersection is on the front/outside face of the object
+    pub front_face: bool;
+}
+
+impl Hit {
+    
+    pub fn new(p: Point3, t: f64, r: &Ray, outward_normal: Vec3) {
+        let front_face: bool = r.dir.dot(outward_normal) < 0;
+        Hit {
+            p, t, front_face,
+            normal: if front_face { outward_normal } else { -outward_normal }
+        }
+    }
+
 }
 
 trait Hittable {
@@ -36,19 +51,17 @@ impl Hittable for Sphere {
             let t: f64 = (-half_b - root) / a;
             if temp < t_max && temp > t_min {
                 let p: r.at(temp);
-                return Some(Hit {
-                    t, p,
-                    normal: (p - self.center) / self.radius
-                })
+                return Some(Hit::new(
+                    p, t, &r, (p - self.center) / self.radius
+                ))
             }
 
             let t: f64 = (-half_b + root) / a;
             if temp < t_max && temp > t_min {
                 let p: r.at(temp);
-                return Some(Hit {
-                    t, p,
-                    normal: (p - self.center) / self.radius
-                })
+                return Some(Hit::new(
+                    p, t, &r, (p - self.center) / self.radius
+                ))
             }
         }
         return None;
