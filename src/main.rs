@@ -26,8 +26,8 @@ fn main() {
     for j in (0..IMG_HEIGHT).rev() {
         eprintln!("\rScanlines remaining: {}", j);
         for i in 0..IMG_WIDTH {
-            let u: f64 = f64::from(i)/f64::from(IMG_HEIGHT-1);
-            let v: f64 = f64::from(j)/f64::from(IMG_WIDTH-1);
+            let u: f64 = f64::from(i)/f64::from(IMG_WIDTH-1);
+            let v: f64 = f64::from(j)/f64::from(IMG_HEIGHT-1);
             // I know this sucks and could be avoided by defining &u + v and u + &v, but I want to practice understanding ownership
             let r: Ray = Ray::new(&origin, &(&lower_left_corner + &(&(&horizontal * u) + &(&(&vertical * v) - &origin))));
             r.color().println();

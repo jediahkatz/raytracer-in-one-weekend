@@ -182,7 +182,7 @@ impl Vec3 {
         self.x * v.x + self.y * v.y + self.z * v.z
     }
 
-    pub fn rdot(self, v: Self) -> f64 {
+    pub fn mdot(self, v: Self) -> f64 {
         self.x * v.x + self.y * v.y + self.z * v.z
     }
 
