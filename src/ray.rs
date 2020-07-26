@@ -16,11 +16,23 @@ impl Ray {
     }
 
     pub fn color(&self) -> Color3 {
+        if self.hits_sphere(&Point3::new(0.0,0.0,-1.0), 0.5) {
+            return Color3::new(1.0, 0.0, 0.0);
+        }
         // Linearly blends white and blue depending on y-height
         // of normalized ray direction vector
         let unit_dir: Vec3 = self.dir.normalized();
         let t: f64 = 0.5 * (unit_dir.y + 1.0);
         // Lerp between #FFF (white) and #80B3FF (sky blue)
         Color3::new(1.0, 1.0, 1.0) * (1.0 - t) + Color3::new(0.5, 0.7, 1.0) * t
+    }
+
+    pub fn hits_sphere(&self, center: &Point3, radius: f64) -> bool {
+        let oc: Vec3 = &self.orig - center;
+        let a: f64 = self.dir.dot(&self.dir);
+        let b: f64 = 2.0 * oc.dot(&self.dir);
+        let c: f64 = oc.dot(&oc) - radius*radius;
+        let discriminant: f64 = b*b - 4.0*a*c;
+        return discriminant > 0.0;
     }
 }
