@@ -35,12 +35,12 @@ impl Ray {
     /// Returns `t` s.t. this ray intersects the given sphere at `t`, or None
     pub fn hits_sphere(&self, center: &Point3, radius: f64) -> Option<f64> {
         let oc: Vec3 = &self.orig - center;
-        let a: f64 = self.dir.dot(&self.dir);
-        let b: f64 = 2.0 * oc.dot(&self.dir);
-        let c: f64 = oc.dot(&oc) - radius*radius;
-        let discriminant: f64 = b*b - 4.0*a*c;
+        let a: f64 = self.dir.length_squared();
+        let half_b: f64 = oc.dot(&self.dir);
+        let c: f64 = oc.length_squared() - radius*radius;
+        let discriminant: f64 = half_b * half_b - a * c;
         if discriminant >= 0.0 {
-            return Some((-b - discriminant.sqrt()) / (2.0 * a));
+            return Some((-half_b - discriminant.sqrt()) / a);
         }
         return None;
     }
