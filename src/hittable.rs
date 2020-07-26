@@ -22,9 +22,32 @@ impl Hit {
 trait Hittable {
 
     /// If this object is hit by the given ray, return a Hit struct
-    pub fn hits(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<Hit>;
+    pub fn hit_by(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<Hit>;
 
 }
+
+/// A collection of Hittables is itself Hittable
+impl Hittable for Vec<Hittable> {
+
+    pub fn hit_by(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
+        let mut closest_hit: None;
+
+        // Find the closest hit
+        for hittable in self {
+            let maybe_hit = hittable.hit_by(
+                r, t_min, 
+                if closest_hit.is_none() { t_max } else { closest_hit.t }
+            );
+            if maybe_hit.is_some() {
+                closest_hit = maybe_hit
+            }
+        }
+
+        closest_hit
+    }
+
+}
+
 
 struct Sphere {
     pub center: Point3;
@@ -40,7 +63,7 @@ impl Sphere {
 }
 
 impl Hittable for Sphere {
-    pub fn hits(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
+    pub fn hit_by(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
         let oc: Vec3 = &r.orig - &self.center;
         let a: f64 = r.dir.length_squared();
         let half_b: f64 = oc.dot(&r.dir);
