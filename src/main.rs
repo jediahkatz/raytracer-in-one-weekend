@@ -5,9 +5,11 @@ mod camera;
 use vec3::{Color3, Point3, Vec3};
 use ray::Ray;
 use hittable::{Hittable, Sphere};
-use camera::{Camera};
+use camera::Camera;
+use rand::Rng;
 
 fn main() {
+    let mut rng = rand::thread_rng();
 
     // Image
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
@@ -31,10 +33,14 @@ fn main() {
     for j in (0..IMG_HEIGHT).rev() {
         eprintln!("\rScanlines remaining: {}", j);
         for i in 0..IMG_WIDTH {
-            let u: f64 = f64::from(i)/f64::from(IMG_WIDTH-1);
-            let v: f64 = f64::from(j)/f64::from(IMG_HEIGHT-1);
-            let r: Ray = cam.get_ray(u, v);
-            r.color(&world).println(SAMPLES_PER_PIXEL);
+            let mut c: Color3 = Color3::new(0.0, 0.0, 0.0);
+            for _ in 0..SAMPLES_PER_PIXEL {
+                let u: f64 = (f64::from(i) + rng.gen::<f64>())/f64::from(IMG_WIDTH-1);
+                let v: f64 = (f64::from(j) + rng.gen::<f64>())/f64::from(IMG_HEIGHT-1);
+                let r: Ray = cam.get_ray(u, v);
+                c += r.color(&world);
+            }
+            c.println(SAMPLES_PER_PIXEL);
         }
     }
 
