@@ -1,4 +1,4 @@
-use crate::hittable::{Hit};
+use crate::hittable::{Hittable};
 use crate::vec3::{Point3, Vec3, Color3};
 
 #[derive(Debug, Clone)]
@@ -16,33 +16,17 @@ impl Ray {
         &self.orig + &(&self.dir * t)
     }
 
-    pub fn color(&self) -> Color3 {
-        match self.hits_sphere(&Point3::new(0.0, 0.0, -1.0), 0.5) {
-            Some(t) if t >= 0.0 => {
-                let N : Vec3 = (self.at(t) - Vec3::new(0.0, 0.0, -1.0)).normalized();
-                Color3::new(N.x + 1.0, N.y + 1.0, N.z + 1.0) * 0.5
+    pub fn color(&self, world: &Vec<&dyn Hittable>) -> Color3 {
+        match world.hit_by(self, 0.0, f64::INFINITY) {
+            Some(hit) => {
+                (hit.normal + Color3::new(1.0, 1.0, 1.0)) * 0.5
             }
             _ => {
-                // Linearly blends white and blue depending on y-height
-                // of normalized ray direction vector
                 let unit_dir: Vec3 = self.dir.normalized();
                 let t: f64 = 0.5 * (unit_dir.y + 1.0);
                 // Lerp between #FFF (white) and #80B3FF (sky blue)
                 Color3::new(1.0, 1.0, 1.0) * (1.0 - t) + Color3::new(0.5, 0.7, 1.0) * t
             }
         }
-    }
-
-    /// Returns `t` s.t. this ray intersects the given sphere at `t`, or None
-    pub fn hits_sphere(&self, center: &Point3, radius: f64) -> Option<f64> {
-        let oc: Vec3 = &self.orig - center;
-        let a: f64 = self.dir.length_squared();
-        let half_b: f64 = oc.dot(&self.dir);
-        let c: f64 = oc.length_squared() - radius*radius;
-        let discriminant: f64 = half_b * half_b - a * c;
-        if discriminant >= 0.0 {
-            return Some((-half_b - discriminant.sqrt()) / a);
-        }
-        return None;
     }
 }
