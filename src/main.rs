@@ -16,6 +16,7 @@ fn main() {
     const IMG_WIDTH: i32 = 400;
     const IMG_HEIGHT: i32 = ((IMG_WIDTH as f64) / ASPECT_RATIO) as i32;
     const SAMPLES_PER_PIXEL: i32 = 100;
+    const MAX_DEPTH: i32 = 50;
 
     // World
     let mut world: Vec<&dyn Hittable> = Vec::new();
@@ -38,7 +39,7 @@ fn main() {
                 let u: f64 = (f64::from(i) + rng.gen::<f64>())/f64::from(IMG_WIDTH-1);
                 let v: f64 = (f64::from(j) + rng.gen::<f64>())/f64::from(IMG_HEIGHT-1);
                 let r: Ray = cam.get_ray(u, v);
-                c += r.color(&world);
+                c += r.color(&world, MAX_DEPTH);
             }
             c.println(SAMPLES_PER_PIXEL);
         }
