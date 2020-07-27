@@ -1,5 +1,6 @@
 mod vec3;
 mod ray;
+mod hittable;
 use vec3::{Color3, Point3, Vec3};
 use ray::Ray;
 

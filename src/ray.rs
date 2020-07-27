@@ -1,3 +1,4 @@
+use crate::hittable::{Hit};
 use crate::vec3::{Point3, Vec3, Color3};
 
 #[derive(Debug, Clone)]
