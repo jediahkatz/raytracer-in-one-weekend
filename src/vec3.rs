@@ -223,9 +223,9 @@ impl Color3 {
 
     pub fn println(&self, samples_per_pixel: i32) {
         let samples: f64 = f64::from(samples_per_pixel);
-        let ir: i32 = (256.0 * clamp(self.x / samples, 0.0, 0.999)) as i32;
-        let ig: i32 = (256.0 * clamp(self.y / samples, 0.0, 0.999)) as i32;
-        let ib: i32 = (256.0 * clamp(self.z / samples, 0.0, 0.999)) as i32;
+        let ir: i32 = (256.0 * clamp((self.x / samples).sqrt(), 0.0, 0.999)) as i32;
+        let ig: i32 = (256.0 * clamp((self.y / samples).sqrt(), 0.0, 0.999)) as i32;
+        let ib: i32 = (256.0 * clamp((self.z / samples).sqrt(), 0.0, 0.999)) as i32;
 
         println!("{} {} {}", ir, ig, ib);
     }

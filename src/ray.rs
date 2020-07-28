@@ -20,7 +20,7 @@ impl Ray {
         if depth <= 0 {
             return Color3::new(0.0, 0.0, 0.0);
         }
-        match world.hit_by(self, 0.0, f64::INFINITY) {
+        match world.hit_by(self, 0.001, f64::INFINITY) {
             Some(hit) => {
                 let target: Point3 = &hit.p + &hit.normal + Vec3::random_in_unit_sphere();
                 Ray::new(&hit.p, &(&target - &hit.p)).color(world, depth-1) * 0.5
