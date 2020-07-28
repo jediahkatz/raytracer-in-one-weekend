@@ -225,6 +225,10 @@ impl Vec3 {
     pub fn normalized(&self) -> Self {
         self * (1.0/self.length())
     }
+
+    pub fn reflect(&self, normal: &Vec3) -> Vec3 {
+        self - &(normal * self.dot(normal) * 2.0)
+    }
 }
 
 pub type Point3 = Vec3;

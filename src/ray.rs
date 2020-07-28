@@ -20,17 +20,15 @@ impl Ray {
         if depth <= 0 {
             return Color3::new(0.0, 0.0, 0.0);
         }
-        match world.hit_by(self, 0.001, f64::INFINITY) {
-            Some(hit) => {
-                let target: Point3 = &hit.p + &hit.normal + Vec3::random_unit_vector();
-                Ray::new(&hit.p, &(&target - &hit.p)).color(world, depth-1) * 0.5
+        if let Some(hit) = world.hit_by(self, 0.001, f64::INFINITY) {
+            if let Some((attenuation, scattered)) = hit.material.scatter(self, &hit) {
+                return attenuation * scattered.color(world, depth-1)
             }
-            _ => {
-                let unit_dir: Vec3 = self.dir.normalized();
-                let t: f64 = 0.5 * (unit_dir.y + 1.0);
-                // Lerp between #FFF (white) and #80B3FF (sky blue)
-                Color3::new(1.0, 1.0, 1.0) * (1.0 - t) + Color3::new(0.5, 0.7, 1.0) * t
-            }
+            return Color3::new(0.0, 0.0, 0.0)
         }
+        let unit_dir: Vec3 = self.dir.normalized();
+        let t: f64 = 0.5 * (unit_dir.y + 1.0);
+        // Lerp between #FFF (white) and #80B3FF (sky blue)
+        Color3::new(1.0, 1.0, 1.0) * (1.0 - t) + Color3::new(0.5, 0.7, 1.0) * t
     }
 }

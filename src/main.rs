@@ -6,6 +6,7 @@ mod camera;
 use vec3::{Color3, Point3, Vec3};
 use ray::Ray;
 use hittable::{Object, Sphere};
+use material::{Lambertian, Metal};
 use camera::Camera;
 use rand::Rng;
 
@@ -20,11 +21,16 @@ fn main() {
     const MAX_DEPTH: i32 = 50;
 
     // World
-    let mut world: Vec<&dyn Object> = Vec::new();
-    let s1 : Sphere = Sphere::new(&Point3::new(0.0, 0.0, -1.0), 0.5);
-    let s2 : Sphere = Sphere::new(&Point3::new(0.0, -100.5, -1.0), 100.0);
-    world.push(&s1);
-    world.push(&s2);
+    let mat_ground = Lambertian::new(Color3::new(0.8, 0.8, 0.0));
+    let mat_center = Lambertian::new(Color3::new(0.7, 0.3, 0.3));
+    let mat_left = Metal::new(Color3::new(0.8, 0.8, 0.8));
+    let mat_right = Metal::new(Color3::new(0.8, 0.6, 0.2));
+    let s_center = Sphere::new(&Point3::new(0.0, 0.0, -1.0), 0.5, &mat_center);
+    let s_ground = Sphere::new(&Point3::new(0.0, -100.5, -1.0), 100.0, &mat_ground);
+    let s_left = Sphere::new(&Point3::new(-1.0, 0.0, -1.0), 0.5, &mat_left);
+    let s_right = Sphere::new(&Point3::new(1.0, 0.0, -1.0), 0.5, &mat_right);
+
+    let world: Vec<&dyn Object> = vec![&s_center, &s_ground, &s_left, &s_right];
 
     // Camera
     let cam: Camera = Camera::new();
