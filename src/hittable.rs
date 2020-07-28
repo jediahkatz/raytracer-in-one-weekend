@@ -22,7 +22,7 @@ impl Hit {
 
 }
 
-pub trait Hittable {
+pub trait Object {
 
     /// If this object is hit by the given ray, return a Hit struct
     fn hit_by(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<Hit>;
@@ -30,7 +30,7 @@ pub trait Hittable {
 }
 
 /// A collection of Hittables is itself Hittable
-impl Hittable for Vec<&dyn Hittable> {
+impl Object for Vec<&dyn Object> {
 
     fn hit_by(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
         let mut closest_hit: Option<Hit> = None;
@@ -64,7 +64,7 @@ impl Sphere {
 
 }
 
-impl Hittable for Sphere {
+impl Object for Sphere {
 
     fn hit_by(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
         let oc: Vec3 = &r.orig - &self.center;

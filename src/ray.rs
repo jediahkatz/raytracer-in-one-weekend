@@ -1,4 +1,4 @@
-use crate::hittable::{Hittable};
+use crate::hittable::{Object};
 use crate::vec3::{Point3, Vec3, Color3};
 
 #[derive(Debug, Clone)]
@@ -16,7 +16,7 @@ impl Ray {
         &self.orig + &(&self.dir * t)
     }
 
-    pub fn color(&self, world: &Vec<&dyn Hittable>, depth: i32) -> Color3 {
+    pub fn color(&self, world: &Vec<&dyn Object>, depth: i32) -> Color3 {
         if depth <= 0 {
             return Color3::new(0.0, 0.0, 0.0);
         }

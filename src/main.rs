@@ -4,7 +4,7 @@ mod hittable;
 mod camera;
 use vec3::{Color3, Point3, Vec3};
 use ray::Ray;
-use hittable::{Hittable, Sphere};
+use hittable::{Object, Sphere};
 use camera::Camera;
 use rand::Rng;
 
@@ -19,7 +19,7 @@ fn main() {
     const MAX_DEPTH: i32 = 50;
 
     // World
-    let mut world: Vec<&dyn Hittable> = Vec::new();
+    let mut world: Vec<&dyn Object> = Vec::new();
     let s1 : Sphere = Sphere::new(&Point3::new(0.0, 0.0, -1.0), 0.5);
     let s2 : Sphere = Sphere::new(&Point3::new(0.0, -100.5, -1.0), 100.0);
     world.push(&s1);
