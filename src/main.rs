@@ -23,8 +23,8 @@ fn main() {
     // World
     let mat_ground = Lambertian::new(Color3::new(0.8, 0.8, 0.0));
     let mat_center = Lambertian::new(Color3::new(0.7, 0.3, 0.3));
-    let mat_left = Metal::new(Color3::new(0.8, 0.8, 0.8));
-    let mat_right = Metal::new(Color3::new(0.8, 0.6, 0.2));
+    let mat_left = Metal::new(Color3::new(0.8, 0.8, 0.8), 0.3);
+    let mat_right = Metal::new(Color3::new(0.8, 0.6, 0.2), 1.0);
     let s_center = Sphere::new(&Point3::new(0.0, 0.0, -1.0), 0.5, &mat_center);
     let s_ground = Sphere::new(&Point3::new(0.0, -100.5, -1.0), 100.0, &mat_ground);
     let s_left = Sphere::new(&Point3::new(-1.0, 0.0, -1.0), 0.5, &mat_left);
