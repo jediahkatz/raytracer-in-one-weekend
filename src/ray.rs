@@ -22,7 +22,7 @@ impl Ray {
         }
         match world.hit_by(self, 0.001, f64::INFINITY) {
             Some(hit) => {
-                let target: Point3 = &hit.p + &hit.normal + Vec3::random_in_unit_sphere();
+                let target: Point3 = &hit.p + &hit.normal + Vec3::random_unit_vector();
                 Ray::new(&hit.p, &(&target - &hit.p)).color(world, depth-1) * 0.5
             }
             _ => {

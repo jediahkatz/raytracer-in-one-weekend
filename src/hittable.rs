@@ -7,7 +7,7 @@ pub struct Hit {
     pub normal: Vec3,
     pub t: f64,
     /// Whether this intersection is on the front/outside face of the object
-    pub front_face: bool,
+    pub front_face: bool
 }
 
 impl Hit {
