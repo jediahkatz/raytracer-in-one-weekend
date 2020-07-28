@@ -1,6 +1,7 @@
 mod vec3;
 mod ray;
 mod hittable;
+mod material;
 mod camera;
 use vec3::{Color3, Point3, Vec3};
 use ray::Ray;

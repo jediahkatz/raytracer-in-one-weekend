@@ -1,21 +1,24 @@
 use crate::vec3::{Point3, Vec3, Color3};
 use crate::ray::{Ray};
+use crate::material::Material;
 
-pub struct Hit {
+pub struct Hit<'a> {
     pub p: Point3,
     /// Normal vector pointing in the opposite direction of the ray
     pub normal: Vec3,
+    pub material: &'a dyn Material,
     pub t: f64,
     /// Whether this intersection is on the front/outside face of the object
     pub front_face: bool
 }
 
-impl Hit {
+impl<'a> Hit<'a> {
     
-    pub fn new(p: Point3, t: f64, r: &Ray, outward_normal: Vec3) -> Hit {
+    pub fn new(p: Point3, t: f64, material: &'a dyn Material,
+               r: &Ray, outward_normal: Vec3) -> Hit<'a> {
         let front_face: bool = r.dir.dot(&outward_normal) < 0.0;
         Hit {
-            p, t, front_face,
+            p, t, front_face, material,
             normal: if front_face { outward_normal } else { -outward_normal }
         }
     }
@@ -51,20 +54,21 @@ impl Object for Vec<&dyn Object> {
 
 }
 
-pub struct Sphere {
+pub struct Sphere<'a> {
     pub center: Point3,
     pub radius: f64,
+    pub material: &'a dyn Material,
 }
 
-impl Sphere {
+impl<'a> Sphere<'a> {
     
-    pub fn new(center: &Point3, radius: f64) -> Sphere {
-        Sphere { center: center.clone(), radius }
+    pub fn new(center: &Point3, radius: f64, material: &'a dyn Material) -> Self {
+        Sphere { center: center.clone(), radius, material }
     }
 
 }
 
-impl Object for Sphere {
+impl<'a> Object for Sphere<'a> {
 
     fn hit_by(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
         let oc: Vec3 = &r.orig - &self.center;
@@ -79,7 +83,7 @@ impl Object for Sphere {
                 let p: Vec3 = r.at(t);
                 let outer_normal: Vec3 = (&p - &self.center) / self.radius;
                 return Some(Hit::new(
-                    p, t, &r, outer_normal
+                    p, t, self.material, &r, outer_normal,
                 ))
             }
 
@@ -88,7 +92,7 @@ impl Object for Sphere {
                 let p: Vec3 = r.at(t);
                 let outer_normal: Vec3 = (&p - &self.center) / self.radius;
                 return Some(Hit::new(
-                    p, t, &r, outer_normal
+                    p, t, self.material, &r, outer_normal
                 ))
             }
         }
